@@ -78,6 +78,7 @@
 import { reactive, ref } from 'vue';
 import { User, Lock } from '@element-plus/icons-vue';
 import { login } from "@/api/user.js";
+import { ElMessage } from "element-plus";
 
 // 表单引用和状态
 const loginFormRef = ref(null);
