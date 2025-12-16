@@ -37,12 +37,18 @@ service.interceptors.response.use(
                 path: '/login',
                 query: { redirect: router.currentRoute.value.fullPath }
             })
-            return Promise.reject(res.message)
+            return res
         }
+
+        if (res.code !== 200) {
+            ElMessage.error(res.message)
+            return Promise.reject(new Error(res.message || 'Error'))
+        }
+
         return res
     },
     error => {
-        console.error('err' + error)
+        console.error('err ' + error)
         return Promise.reject(error)
     }
 )
