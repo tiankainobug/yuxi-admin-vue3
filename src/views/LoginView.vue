@@ -51,9 +51,11 @@
                         </el-input>
                     </el-form-item>
 
-                    <el-form-item class="form-options">
-                        <el-checkbox v-model="loginForm.rememberMe">记住我</el-checkbox>
-                        <el-link type="primary" :underline="false">忘记密码?</el-link>
+                    <el-form-item>
+                        <div class="form-options">
+                            <el-checkbox v-model="loginForm.rememberMe">记住我</el-checkbox>
+                            <el-link type="primary" :underline="false">忘记密码?</el-link>
+                        </div>
                     </el-form-item>
 
                     <el-form-item>
@@ -77,8 +79,12 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import { User, Lock } from '@element-plus/icons-vue';
-import { login } from "@/api/user.js";
+import { useRouter } from 'vue-router';
 import { ElMessage } from "element-plus";
+import { login } from "@/api/user.js";
+
+// 路由对象
+const router = useRouter();
 
 // 表单引用和状态
 const loginFormRef = ref(null);
@@ -113,17 +119,17 @@ const submitForm = async (formEl) => {
 
             const res = await login(loginForm)
 
-            console.log('res', res);
-
             if (!res.code === 200) {
                 ElMessage.error(res.message);
                 return;
             }
+
             isLoading.value = false;
             ElMessage({
                 message: '登录成功！正在跳转...',
                 type: 'success',
             });
+            await router.push('/home')
 
         } else {
             // 校验失败
@@ -218,6 +224,7 @@ const submitForm = async (formEl) => {
 
 /* 表单选项：记住我 & 忘记密码 */
 .form-options {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     margin-top: -10px; /* 调整与上一个输入框的间距 */
