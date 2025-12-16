@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import Layout from "@/components/Layout/Layout.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
             path: '/',
-            redirect: '/login'
+            redirect: '/home'
         },
         {
             path: '/login',
@@ -16,7 +17,14 @@ const router = createRouter({
         {
             path: '/home',
             name: 'home',
-            component: () => import('../views/HomeView.vue')
+            component: Layout,
+            children: [
+                {
+                    path: '',
+                    name: '首页',
+                    component: () => import('../views/HomeView.vue')
+                },
+            ]
         },
     ]
 })
