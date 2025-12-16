@@ -42,7 +42,7 @@ service.interceptors.response.use(
 
         if (res.code !== 200) {
             ElMessage.error(res.message)
-            return Promise.reject(new Error(res.message || 'Error'))
+            return res
         }
 
         return res
