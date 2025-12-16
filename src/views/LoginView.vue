@@ -82,6 +82,7 @@ import { User, Lock } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
 import { ElMessage } from "element-plus";
 import { login } from "@/api/user.js";
+import { setToken } from "@/utils/token.js";
 
 // 路由对象
 const router = useRouter();
@@ -119,10 +120,7 @@ const submitForm = async (formEl) => {
 
             const res = await login(loginForm)
 
-            if (!res.code === 200) {
-                ElMessage.error(res.message);
-                return;
-            }
+            setToken(res.data)
 
             isLoading.value = false;
             ElMessage({
