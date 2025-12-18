@@ -35,8 +35,12 @@ const router = createRouter({
  * @param componentPath 后端返回的组件路径（如 "dashboard/index"）
  */
 export const mapComponent = (componentPath) => {
-    // 拼接组件实际路径（根据项目结构调整）
-    return defineAsyncComponent(() => import(`@/views/${componentPath}`))
+    if (process.env.NODE_ENV === 'development') {
+        return (resolve) => require([`@/views/${componentPath}/index.vue`], resolve)
+    } else {
+        // 使用 import 实现生产环境的路由懒加载
+        return () => import(`@/views/${componentPath}/index.vue`)
+    }
 }
 
 export const dynamicRoutes = []

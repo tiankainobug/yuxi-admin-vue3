@@ -32,10 +32,11 @@
 
 <script setup>
 import { Location } from "@element-plus/icons-vue";
-import { onMounted, reactive } from "vue";
+import { defineAsyncComponent, onMounted, reactive } from "vue";
 import { getMenuTreeApi } from "@/api/menu/index.js";
 import MenuItem from "@/components/Layout/MenuItem.vue";
 import router, { mapComponent } from "@/router/index.js";
+import Layout from "@/components/Layout/Layout.vue";
 
 const data = reactive({
     menuTree: [],
@@ -60,7 +61,7 @@ const buildMenuTree = (menuTree) => {
             const treeItem = {
                 path: item.routerPath,
                 name: item.name,
-                component: mapComponent(item.component),
+                component: Layout,
                 children: buildMenuTree(item.children)
             }
             treeList.push(treeItem)
@@ -76,11 +77,41 @@ const buildMenuTree = (menuTree) => {
     return treeList
 }
 
+// 递归添加路由的函数
+const addRouteRecursive = (router, routes, parent) => {
+    routes.forEach(route => {
+        if (parent && parent.name) {
+            router.addRoute(parent.name, route)
+        } else {
+            router.addRoute(route)
+        }
+        if (route.children && route.children.length) {
+            addRouteRecursive(router, route.children, route)
+        }
+    })
+}
+
+/**
+ * 初始化菜单树
+ */
 const initMenuTree = async () => {
     const res = await getMenuTreeApi()
+
+    // 构造路由
     data.menuTree = buildMenuTree(res.data);
     console.log('data.menuTree', data.menuTree)
+
+    // 添加路由到 vue-router
+    addRouteRecursive(router, data.menuTree)
+
+    console.log('routers', router.getRoutes())
 }
+
+/**
+ * 判断是否是子菜单
+ * @param {*} menu
+ * @returns boolean
+ */
 const isSubMenu = (menu) => {
     if (menu.children && menu.children.length > 0) {
         return true
@@ -88,6 +119,10 @@ const isSubMenu = (menu) => {
     return false
 }
 
+/**
+ * 菜单点击事件
+ * @param {*} menu
+ */
 const handleMenuSelect = (selectedIndex) => {
     console.log('selectedIndex', selectedIndex)
     // router.push('/system/menu')

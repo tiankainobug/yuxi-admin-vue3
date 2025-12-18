@@ -1,5 +1,5 @@
 <template>
-    <el-menu-item :index="getRouterIndex" @click="handleMenuClick(menuItem)">
+    <el-menu-item :index="getRouterIndex()" @click="handleMenuClick(menuItem)">
         <template #title>
             <el-icon>
                 <location/>
