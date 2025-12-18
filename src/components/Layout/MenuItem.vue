@@ -4,7 +4,7 @@
             <el-icon>
                 <location/>
             </el-icon>
-            <span>{{ menuItem.name }}</span>
+            <span>{{ menuItem.meta.name }}</span>
         </template>
     </el-menu-item>
 </template>

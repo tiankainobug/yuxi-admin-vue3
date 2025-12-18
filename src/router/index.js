@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Layout from "@/components/Layout/Layout.vue";
-import { defineAsyncComponent } from "vue";
+import { getToken } from "@/utils/token.js";
+import useRouteStore from "@/stores/router.js";
+import { getDynamicRoutes } from "@/router/routerUtils.js";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,7 +14,6 @@ const router = createRouter({
         {
             path: '/login',
             name: 'login',
-            // route level code-splitting
             component: () => import('../views/LoginView.vue')
         },
         {
@@ -30,19 +31,25 @@ const router = createRouter({
     ]
 })
 
-/**
- * 映射组件路径到实际组件（懒加载）
- * @param componentPath 后端返回的组件路径（如 "dashboard/index"）
- */
-export const mapComponent = (componentPath) => {
-    if (process.env.NODE_ENV === 'development') {
-        return (resolve) => require([`@/views/${componentPath}/index.vue`], resolve)
-    } else {
-        // 使用 import 实现生产环境的路由懒加载
-        return () => import(`@/views/${componentPath}/index.vue`)
-    }
-}
+router.beforeEach((to, from, next) => {
+    if (getToken()) {
+        if (to.path === '/login') {
+            next({ path: '/' })
+            return
+        }
 
-export const dynamicRoutes = []
+        if (useRouteStore().dynamicRoutes.length === 0) {
+            getDynamicRoutes().then(() => {
+                next({ ...to, replace: true })
+            })
+            return;
+        }
+
+        next()
+
+    } else {
+        next(`/login?redirect=${to.fullPath}`) // 否则全部重定向到登录页
+    }
+})
 
 export default router
