@@ -1,5 +1,5 @@
 <template>
-    <el-menu-item :index="menuItem.id.toString()" @click="handleMenuClick(menuItem)">
+    <el-menu-item :index="getRouterIndex" @click="handleMenuClick(menuItem)">
         <template #title>
             <el-icon>
                 <location/>
@@ -12,12 +12,21 @@
 <script setup>
 import { Location } from "@element-plus/icons-vue";
 
-defineProps({
+const props = defineProps({
     menuItem: {
         type: Object,
         required: true
+    },
+    rootRouter: {
+        type: String,
+        required: true
     }
 })
+
+const getRouterIndex = () => {
+    if (props.rootRouter) return `${props.rootRouter}/${props.menuItem.path}`
+    return props.menuItem.path
+}
 
 const handleMenuClick = (menu) => {
     console.log(menu)
