@@ -19,7 +19,8 @@ const props = defineProps({
     },
     rootRouter: {
         type: String,
-        required: true
+        required: false,
+        default: ''
     }
 })
 
