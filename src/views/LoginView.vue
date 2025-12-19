@@ -23,13 +23,13 @@
                     :model="loginForm"
                     :rules="loginRules"
                     label-position="top"
-                    @keyup.enter="submitForm(loginFormRef)"
                 >
                     <el-form-item label="账号" prop="username">
                         <el-input
                             v-model="loginForm.username"
                             placeholder="请输入账号"
                             size="large"
+                            @keyup.enter="focusPassword"
                         >
                             <template #prefix>
                                 <el-icon><User /></el-icon>
@@ -44,6 +44,8 @@
                             placeholder="请输入密码"
                             show-password
                             size="large"
+                            ref="passwordInputRef"
+                            @keyup.enter="submitForm(loginFormRef)"
                         >
                             <template #prefix>
                                 <el-icon><Lock /></el-icon>
@@ -89,6 +91,7 @@ const router = useRouter();
 
 // 表单引用和状态
 const loginFormRef = ref(null);
+const passwordInputRef = ref(null);
 const isLoading = ref(false);
 
 // 表单数据模型
@@ -109,6 +112,11 @@ const loginRules = reactive({
         { min: 6, message: '密码长度不能少于 6 位', trigger: 'blur' },
     ],
 });
+
+// 聚焦密码框方法
+const focusPassword = () => {
+    passwordInputRef.value?.focus();
+};
 
 // 提交表单方法
 const submitForm = async (formEl) => {

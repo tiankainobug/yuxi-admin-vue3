@@ -43,7 +43,10 @@ router.beforeEach(async (to, from) => {
             // 获取动态路由
             const res = await getDynamicRoutes()
             if (res) {
-                return true
+                return {
+                    path: to.fullPath,
+                    replace: true
+                }
             }
         }
 
