@@ -22,6 +22,7 @@ import TopLayout from "@/components/Layout/TopLayout.vue";
 </script>
 
 <style scoped lang="scss">
+$header-layout-height: 40px;
 $aside-width: 200px;
 
 .common-layout {
@@ -45,7 +46,7 @@ $aside-width: 200px;
 
     display: flex;
     align-items: center;
-    background: $color-main;
+    background: $color-primary;
 }
 
 </style>
