@@ -1,7 +1,5 @@
 import axios from 'axios'
 import { getStorage } from "@/utils/storage.js";
-import { ElMessage } from "element-plus";
-import router from "@/router/index.js";
 
 // 创建 axios 实例
 const service = axios.create({
@@ -27,23 +25,8 @@ service.interceptors.request.use(
 
 // 响应拦截器
 service.interceptors.response.use(
-    response => {
+    async response => {
         const res = response.data
-
-        // 如果返回的状态码不是200，则进行错误处理
-        if (res.code === 401 || res.code === 403) {
-            ElMessage.warning(res.message)
-            router.push({
-                path: '/login',
-                query: { redirect: router.currentRoute.value.fullPath }
-            })
-            return res
-        }
-
-        if (res.code !== 200) {
-            ElMessage.error(res.message)
-            return Promise.reject(res)
-        }
 
         return res
     },

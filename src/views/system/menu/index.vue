@@ -1,13 +1,10 @@
 <template>
-    <div>
-        菜单管理
+    <div class="page-container">
+        <el-card>
+
+        </el-card>
+        <el-card>
+
+        </el-card>
     </div>
 </template>
-
-<script setup>
-
-</script>
-
-<style scoped>
-
-</style>

@@ -31,24 +31,29 @@ const router = createRouter({
     ]
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from) => {
+    // 判断是否有 token
     if (getToken()) {
-        if (to.path === '/login') {
-            next({ path: '/' })
-            return
+
+        if (to.name === 'login') {
+            return true
         }
 
-        if (useRouteStore().dynamicRoutes.length === 0) {
-            getDynamicRoutes().then(() => {
-                next({ ...to, replace: true })
-            })
-            return;
+        if (!useRouteStore().dynamicRoutes.length) {
+            // 获取动态路由
+            const res = await getDynamicRoutes()
+            if (res) {
+                return true
+            }
         }
 
-        next()
+        return true
 
     } else {
-        next(`/login?redirect=${to.fullPath}`) // 否则全部重定向到登录页
+        return {
+            path: '/login',
+            query: { redirect: to.fullPath }
+        };
     }
 })
 

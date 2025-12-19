@@ -33,6 +33,7 @@ import { Location } from "@element-plus/icons-vue";
 import { onMounted, reactive } from "vue";
 import MenuItem from "@/components/Layout/MenuItem.vue";
 import useRouteStore from "@/stores/router.js";
+import { getDynamicRoutes } from "@/router/routerUtils.js";
 
 const routeStore = useRouteStore()
 

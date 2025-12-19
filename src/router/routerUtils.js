@@ -66,6 +66,11 @@ const buildRouterTree = (menuTree, parent) => {
  */
 export const getDynamicRoutes = async () => {
     const res = await getMenuTreeApi()
+    if (res.code !== 200) {
+        await router.push({ path: '/login', query: { redirect: router.currentRoute.value.fullPath } })
+        return false
+    }
     // 构造路由
     useRouteStore().dynamicRoutes = buildRouterTree(res.data);
+    return true
 }
