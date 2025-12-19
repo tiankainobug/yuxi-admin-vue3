@@ -1,6 +1,6 @@
 <template>
     <div>
-        菜单管理
+        用户管理
     </div>
 </template>
 

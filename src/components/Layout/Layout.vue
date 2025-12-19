@@ -1,11 +1,13 @@
 <template>
     <el-container class="common-layout">
-        <el-aside class="aside-layout">
-            <MenuLogo class="logo-layout"/>
-            <MenuLayout class="menu-layout" />
-        </el-aside>
+        <el-header>
+            <LogoLayout class="logo-layout"/>
+            <TopLayout class="top-layout"/>
+        </el-header>
         <el-container>
-            <el-header>Header</el-header>
+            <el-aside class="aside-layout">
+                <MenuLayout class="menu-layout" />
+            </el-aside>
             <el-main>
                 <router-view />
             </el-main>
@@ -15,8 +17,8 @@
 
 <script setup>
 import MenuLayout from "@/components/Layout/MenuLayout.vue";
-import MenuLogo from "@/components/Layout/MenuLogo.vue";
-
+import LogoLayout from "@/components/Layout/LogoLayout.vue";
+import TopLayout from "@/components/Layout/TopLayout.vue";
 </script>
 
 <style scoped lang="scss">
@@ -30,10 +32,20 @@ $aside-width: 200px;
     width: $aside-width;
 }
 .logo-layout {
-    height: 50px;
+    width: $aside-width;
+    height: 100%;
 }
 .menu-layout {
     height: calc(100vh - 50px);
+}
+
+:deep(.el-header) {
+    --el-header-height: $header-layout-height;
+    --el-header-padding: 0;
+
+    display: flex;
+    align-items: center;
+    background: $color-main;
 }
 
 </style>
