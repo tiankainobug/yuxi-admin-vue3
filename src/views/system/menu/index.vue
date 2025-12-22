@@ -6,7 +6,7 @@
                 <el-row :gutter="15">
                     <el-col :span="6">
                         <el-form-item label="菜单名称" prop="name">
-                            <el-input v-model="searchForm.name" placeholder="请输入用户名"></el-input>
+                            <el-input v-model="searchForm.name" placeholder="请输入菜单名称"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="4">
@@ -38,12 +38,19 @@
                 <el-table-column prop="type" label="类型" width="100">
                     <template #default="{ row }">
                         <el-tag v-if="row.type === 0">目录</el-tag>
-                        <el-tag type="success" v-else-if="row.type === 1">菜单</el-tag>
+                        <el-tag type="danger" v-else-if="row.type === 1">菜单</el-tag>
                         <el-tag type="warning" v-else>按钮</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column prop="component" label="路由组件" />
                 <el-table-column prop="perm" label="权限标识" />
+                <el-table-column prop="visible" label="显示状态" width="100">
+                    <template #default="{ row }">
+                        <el-tag v-if="row.visible === 1">显示</el-tag>
+                        <el-tag type="danger" v-else>隐藏</el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="sort" label="排序" width="100" />
                 <el-table-column label="操作" width="180">
                     <template #default="{ row }">
                         <el-button size="small" @click="goEdit(row)">编辑</el-button>
@@ -121,6 +128,15 @@
                         <el-radio :label="1">显示</el-radio>
                         <el-radio :label="0">隐藏</el-radio>
                     </el-radio-group>
+                </el-form-item>
+                <el-form-item v-if="searchForm.type === 2" prop="perm" label="权限标识">
+                    <el-input v-model="addForm.perm" placeholder="权限标识"></el-input>
+                </el-form-item>
+                <el-form-item prop="sort" label="排序">
+                    <el-input v-model="addForm.sort" placeholder="排序"></el-input>
+                </el-form-item>
+                <el-form-item v-if="addForm.type === 0" prop="icon" label="图标">
+                    <el-input v-model="addForm.icon" placeholder="图标"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="handleSubmit">提交</el-button>
