@@ -2,16 +2,16 @@
     <div class="page-container">
         <!-- 查询条件 -->
         <el-card class="search-card">
-            <el-form label-width="100">
+            <el-form label-width="100" :model="searchForm">
                 <el-row :gutter="15">
                     <el-col :span="6">
-                        <el-form-item label="菜单名称">
-                            <el-input placeholder="请输入用户名"></el-input>
+                        <el-form-item label="菜单名称" prop="name">
+                            <el-input v-model="searchForm.name" placeholder="请输入用户名"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="4">
                         <el-button  type="primary" @click="goSearch">搜索</el-button>
-                        <el-button type="">重置</el-button>
+                        <el-button type="" @click="resetSearch">重置</el-button>
                     </el-col>
                 </el-row>
             </el-form>
@@ -30,6 +30,7 @@
                 stripe
                 style="width: 100%;margin-top: 10px;"
                 :tree-props="{ children: 'children' }"
+                empty-text="暂无数据～"
             >
                 <el-table-column prop="name" label="菜单名称" />
                 <el-table-column prop="routerName" label="路由名称" />
@@ -138,8 +139,7 @@ import { ElMessage } from "element-plus";
 import _ from 'lodash';
 
 const searchForm = reactive({
-    username: '',
-    password: ''
+    name: '',
 })
 const addForm = reactive({})
 const loading = ref(false)
@@ -179,13 +179,19 @@ onMounted(() => {
 
 const goSearch = async () => {
     loading.value = true
-    const res = await getMenuTreeApi()
+    const res = await getMenuTreeApi({
+        name: searchForm.name
+    })
     loading.value = false
     if (res.code !== 200) {
         ElMessage.error(res.message)
         return
     }
     data.tableData = res.data
+}
+const resetSearch = () => {
+    searchForm.name = ''
+    goSearch()
 }
 const initAddForm = (param) => {
     addForm.parentId = -1

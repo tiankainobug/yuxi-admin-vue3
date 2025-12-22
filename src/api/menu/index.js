@@ -1,9 +1,10 @@
 import request from "@/utils/request.js";
 
-export const getMenuTreeApi = () => {
+export const getMenuTreeApi = (data) => {
     return request({
         url: '/menu',
-        method: 'get'
+        method: 'get',
+        params: data
     })
 }
 
