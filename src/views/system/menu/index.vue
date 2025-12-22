@@ -1,5 +1,6 @@
 <template>
     <div class="page-container">
+        <!-- 查询条件 -->
         <el-card class="search-card">
             <el-form label-width="100">
                 <el-row :gutter="15">
@@ -15,6 +16,7 @@
                 </el-row>
             </el-form>
         </el-card>
+        <!-- 表格 -->
         <el-card class="table-card">
             <el-row>
                 <el-col :span="4">
@@ -43,7 +45,7 @@
                 <el-table-column prop="perm" label="权限标识" />
                 <el-table-column label="操作" width="180">
                     <template #default="{ row }">
-                        <el-button size="small">编辑</el-button>
+                        <el-button size="small" @click="goEdit(row)">编辑</el-button>
                         <el-popconfirm
                             title="确定删除该菜单吗？"
                             confirm-button-text="确定"
@@ -57,11 +59,12 @@
                     </template>
                 </el-table-column>
             </el-table>
-
         </el-card>
+
+        <!-- 新增菜单 -->
         <el-dialog
             v-model="data.showAddDialog"
-            title="新增菜单"
+            :title="data.dialogType === 'add' ? '新增菜单' : '编辑菜单'"
             show-close
         >
             <el-form
@@ -119,7 +122,7 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="goSubmit">提交</el-button>
+                    <el-button type="primary" @click="handleSubmit">提交</el-button>
                     <el-button type="" @click="data.showAddDialog = false">取消</el-button>
                 </el-form-item>
             </el-form>
@@ -130,7 +133,7 @@
 <script setup>
 
 import { onMounted, reactive, ref } from "vue";
-import { createMenuApi, deleteMenuApi, getMenuTreeApi } from "@/api/menu/index.js";
+import { createMenuApi, deleteMenuApi, getMenuTreeApi, updateMenuApi } from "@/api/menu/index.js";
 import { ElMessage } from "element-plus";
 import _ from 'lodash';
 
@@ -142,7 +145,8 @@ const addForm = reactive({})
 const loading = ref(false)
 let data = reactive({
     tableData: [],
-    showAddDialog: false
+    showAddDialog: false,
+    dialogType: 'add' // add || edit
 })
 
 const rules = reactive({
@@ -197,7 +201,15 @@ const initAddForm = (param) => {
 }
 const goAdd = () => {
     initAddForm()
+    data.dialogType = 'add'
     data.showAddDialog = true
+}
+const handleSubmit = () => {
+    if (data.dialogType === 'add') {
+        goSubmit()
+    } else {
+        goEditSubmit()
+    }
 }
 const goSubmit = async () => {
     const addParams = _.cloneDeep(addForm)
@@ -205,6 +217,20 @@ const goSubmit = async () => {
         delete addParams.parentId
     }
     const res = await createMenuApi(addParams)
+    if (res.code !== 200) {
+        ElMessage.error(res.message)
+        return
+    }
+    ElMessage.success(res.message)
+    data.showAddDialog = false
+    await goSearch()
+}
+const goEditSubmit = async () => {
+    const addParams = _.cloneDeep(addForm)
+    if (addParams.parentId === -1) {
+        delete addParams.parentId
+    }
+    const res = await updateMenuApi(addParams)
     if (res.code !== 200) {
         ElMessage.error(res.message)
         return
@@ -221,6 +247,15 @@ const goDelete = async (row) => {
     }
     ElMessage.success(res.message)
     await goSearch()
+}
+const goEdit = (row) => {
+    const params = _.cloneDeep(row)
+    if (params.parentId === null) {
+        params.parentId = -1
+    }
+    initAddForm(params)
+    data.dialogType = 'edit'
+    data.showAddDialog = true
 }
 </script>
 

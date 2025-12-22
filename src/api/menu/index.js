@@ -22,10 +22,10 @@ export const createMenuApi = (data) => {
     })
 }
 
-export const updateMenuApi = (id, data) => {
+export const updateMenuApi = (data) => {
     return request({
-        url: `/menu/update/${id}`,
-        method: 'put',
+        url: '/menu/update',
+        method: 'post',
         data
     })
 }
