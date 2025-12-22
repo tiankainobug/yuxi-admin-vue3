@@ -33,6 +33,6 @@ export const updateMenuApi = (id, data) => {
 export const deleteMenuApi = (id) => {
     return request({
         url: `/menu/delete/${id}`,
-        method: 'delete'
+        method: 'post'
     })
 }

@@ -44,7 +44,16 @@
                 <el-table-column label="操作" width="180">
                     <template #default="{ row }">
                         <el-button size="small">编辑</el-button>
-                        <el-button size="small" type="danger">删除</el-button>
+                        <el-popconfirm
+                            title="确定删除该菜单吗？"
+                            confirm-button-text="确定"
+                            cancel-button-text="取消"
+                            @confirm="goDelete(row)"
+                        >
+                            <template #reference>
+                                <el-button size="small" type="danger">删除</el-button>
+                            </template>
+                        </el-popconfirm>
                     </template>
                 </el-table-column>
             </el-table>
@@ -121,7 +130,7 @@
 <script setup>
 
 import { onMounted, reactive, ref } from "vue";
-import { createMenuApi, getMenuTreeApi } from "@/api/menu/index.js";
+import { createMenuApi, deleteMenuApi, getMenuTreeApi } from "@/api/menu/index.js";
 import { ElMessage } from "element-plus";
 import _ from 'lodash';
 
@@ -202,6 +211,15 @@ const goSubmit = async () => {
     }
     ElMessage.success(res.message)
     data.showAddDialog = false
+    await goSearch()
+}
+const goDelete = async (row) => {
+    const res = await deleteMenuApi(row.id)
+    if (res.code !== 200) {
+        ElMessage.error(res.message)
+        return
+    }
+    ElMessage.success(res.message)
     await goSearch()
 }
 </script>
