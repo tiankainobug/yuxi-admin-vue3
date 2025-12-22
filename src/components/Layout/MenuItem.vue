@@ -2,7 +2,8 @@
     <el-menu-item :index="getRouterIndex()" @click="handleMenuClick(menuItem)">
         <template #title>
             <el-icon>
-                <location/>
+                <component :is="menuItem.meta.icon" v-if="menuItem.meta.icon" />
+                <location v-else />
             </el-icon>
             <span>{{ menuItem.meta.name }}</span>
         </template>

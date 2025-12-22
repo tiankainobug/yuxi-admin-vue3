@@ -9,7 +9,8 @@
                 <el-sub-menu v-if="item.children.length > 0" :index="item.path">
                     <template #title>
                         <el-icon>
-                            <location/>
+                            <component :is="item.meta.icon" v-if="item.meta.icon" />
+                            <location v-else />
                         </el-icon>
                         <span>{{ item.meta.name }}</span>
                     </template>

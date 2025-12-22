@@ -135,8 +135,8 @@
                 <el-form-item prop="sort" label="排序">
                     <el-input v-model="addForm.sort" placeholder="排序"></el-input>
                 </el-form-item>
-                <el-form-item v-if="addForm.type === 0" prop="icon" label="图标">
-                    <el-input v-model="addForm.icon" placeholder="图标"></el-input>
+                <el-form-item prop="icon" label="图标">
+                    <icon-select v-model="addForm.icon" />
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="handleSubmit">提交</el-button>
@@ -153,6 +153,7 @@ import { onMounted, reactive, ref } from "vue";
 import { createMenuApi, deleteMenuApi, getMenuTreeApi, updateMenuApi } from "@/api/menu/index.js";
 import { ElMessage } from "element-plus";
 import _ from 'lodash';
+import IconSelect from '@/components/IconSelect.vue';
 
 const searchForm = reactive({
     name: '',

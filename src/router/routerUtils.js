@@ -33,7 +33,8 @@ const buildRouterTree = (menuTree, parent) => {
                 name: menu.routerName,
                 component: mapComponent(menu.component),
                 meta: {
-                    name: menu.name
+                    name: menu.name,
+                    icon: menu.icon
                 }
             }
             router.addRoute(parent.routerName, menuItem)
@@ -47,7 +48,8 @@ const buildRouterTree = (menuTree, parent) => {
             name: menu.routerName,
             component: Layout,
             meta: {
-                name: menu.name
+                name: menu.name,
+                icon: menu.icon
             }
         }
         // 添加路由
