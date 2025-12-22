@@ -1,6 +1,6 @@
 <template>
     <div class="page-container">
-        <el-card>
+        <el-card class="search-card">
             <el-form label-width="100">
                 <el-row :gutter="15">
                     <el-col :span="6">
@@ -22,6 +22,7 @@
                 </el-col>
             </el-row>
             <el-table
+                v-loading="loading"
                 :data="data.tableData"
                 row-key="id"
                 stripe
@@ -52,12 +53,35 @@
         <el-dialog
             v-model="data.showAddDialog"
             title="新增菜单"
+            show-close
         >
-            <el-form label-width="100">
-                <el-form-item prop="name" label="菜单名称" :rules="mustRule()">
+            <el-form
+                :model="addForm"
+                label-width="100"
+            >
+                <el-form-item label="上级菜单">
+                    <el-tree-select
+                        v-model="addForm.parentId"
+                        :data="[{
+                            id: -1,
+                            name: '顶级菜单',
+                            children: data.tableData
+                        }]"
+                        :render-after-expand="false"
+                        :check-on-click-node="true"
+                        :expand-on-click-node="false"
+                        :check-strictly="true"
+                        :props="{
+                            label: 'name',
+                            value: 'id',
+                            children: 'children'
+                        }"
+                    />
+                </el-form-item>
+                <el-form-item prop="name" label="菜单名称" :rules="[mustRule()]">
                     <el-input v-model="addForm.name" placeholder="请输入用户名"></el-input>
                 </el-form-item>
-                <el-form-item prop="type" label="菜单类型" :rules="mustRule()">
+                <el-form-item prop="type" label="菜单类型" :rules="[mustRule()]">
                     <el-radio-group v-model="addForm.type">
                         <el-radio :label="0">目录</el-radio>
                         <el-radio :label="1">菜单</el-radio>
@@ -70,14 +94,23 @@
                 <el-form-item props="routerPath"  label="路由路径">
                     <el-input v-model="addForm.routerPath" placeholder="路由路径"></el-input>
                 </el-form-item>
-                <el-form-item prop="component" label="组件路径">
-                    <el-input v-model="addForm.component" placeholder="路由组件"></el-input>
+                <el-form-item v-if="addForm.type === 1" prop="component" label="组件路径">
+                    <el-input v-model="addForm.component" placeholder="路由组件">
+                        <template #prepend>src/views/</template>
+                        <template #append>
+                            .vue
+                        </template>
+                    </el-input>
                 </el-form-item>
                 <el-form-item props="visible" label="显示状态">
                     <el-radio-group v-model="addForm.visible">
                         <el-radio :label="1">显示</el-radio>
                         <el-radio :label="0">隐藏</el-radio>
                     </el-radio-group>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="goSubmit">提交</el-button>
+                    <el-button type="" @click="data.showAddDialog = false">取消</el-button>
                 </el-form-item>
             </el-form>
         </el-dialog>
@@ -86,16 +119,18 @@
 
 <script setup>
 
-import { onMounted, reactive } from "vue";
-import { getMenuTreeApi } from "@/api/menu/index.js";
+import { onMounted, reactive, ref } from "vue";
+import { createMenuApi, getMenuTreeApi } from "@/api/menu/index.js";
 import { ElMessage } from "element-plus";
 import { mustRule } from "@/utils/rules.js";
+import _ from 'lodash';
 
 const searchForm = reactive({
     username: '',
     password: ''
 })
 const addForm = reactive({})
+const loading = ref(false)
 let data = reactive({
     tableData: [],
     showAddDialog: false
@@ -106,7 +141,9 @@ onMounted(() => {
 })
 
 const goSearch = async () => {
+    loading.value = true
     const res = await getMenuTreeApi()
+    loading.value = false
     if (res.code !== 200) {
         ElMessage.error(res.message)
         return
@@ -114,7 +151,7 @@ const goSearch = async () => {
     data.tableData = res.data
 }
 const initAddForm = (param) => {
-    addForm.parentId = ''
+    addForm.parentId = -1
     addForm.name = ''
     addForm.type = 0
     addForm.routerName = ''
@@ -129,9 +166,26 @@ const goAdd = () => {
     initAddForm()
     data.showAddDialog = true
 }
+const goSubmit = async () => {
+    const addParams = _.cloneDeep(addForm)
+    if (addParams.parentId === -1) {
+        delete addParams.parentId
+    }
+    const res = await createMenuApi(addParams)
+    if (res.code !== 200) {
+        ElMessage.error(res.message)
+        return
+    }
+    ElMessage.success(res.message)
+    data.showAddDialog = false
+    await goSearch()
+}
 </script>
 
 <style scoped>
+:deep(.search-card .el-card__body) {
+    padding-bottom: 0;
+}
 .table-card {
     margin-top: 15px;
 }

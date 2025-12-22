@@ -16,7 +16,7 @@ export const getMenuListApi = () => {
 
 export const createMenuApi = (data) => {
     return request({
-        url: '/menu/create',
+        url: '/menu/add',
         method: 'post',
         data
     })
