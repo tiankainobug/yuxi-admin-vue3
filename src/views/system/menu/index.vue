@@ -58,6 +58,7 @@
             <el-form
                 :model="addForm"
                 label-width="100"
+                :rules="rules"
             >
                 <el-form-item label="上级菜单">
                     <el-tree-select
@@ -78,10 +79,10 @@
                         }"
                     />
                 </el-form-item>
-                <el-form-item prop="name" label="菜单名称" :rules="[mustRule()]">
+                <el-form-item prop="name" label="菜单名称">
                     <el-input v-model="addForm.name" placeholder="请输入用户名"></el-input>
                 </el-form-item>
-                <el-form-item prop="type" label="菜单类型" :rules="[mustRule()]">
+                <el-form-item prop="type" label="菜单类型">
                     <el-radio-group v-model="addForm.type">
                         <el-radio :label="0">目录</el-radio>
                         <el-radio :label="1">菜单</el-radio>
@@ -91,7 +92,7 @@
                 <el-form-item prop="routerName" label="路由名称">
                     <el-input v-model="addForm.routerName" placeholder="路由名称"></el-input>
                 </el-form-item>
-                <el-form-item props="routerPath"  label="路由路径">
+                <el-form-item prop="routerPath" label="路由路径">
                     <el-input v-model="addForm.routerPath" placeholder="路由路径"></el-input>
                 </el-form-item>
                 <el-form-item v-if="addForm.type === 1" prop="component" label="组件路径">
@@ -102,7 +103,7 @@
                         </template>
                     </el-input>
                 </el-form-item>
-                <el-form-item props="visible" label="显示状态">
+                <el-form-item prop="visible" label="显示状态">
                     <el-radio-group v-model="addForm.visible">
                         <el-radio :label="1">显示</el-radio>
                         <el-radio :label="0">隐藏</el-radio>
@@ -122,7 +123,6 @@
 import { onMounted, reactive, ref } from "vue";
 import { createMenuApi, getMenuTreeApi } from "@/api/menu/index.js";
 import { ElMessage } from "element-plus";
-import { mustRule } from "@/utils/rules.js";
 import _ from 'lodash';
 
 const searchForm = reactive({
@@ -134,6 +134,30 @@ const loading = ref(false)
 let data = reactive({
     tableData: [],
     showAddDialog: false
+})
+
+const rules = reactive({
+    name: [
+        { required: true, message: '请输入菜单名称', trigger: 'blur' }
+    ],
+    type: [
+        { required: true, message: '请选择菜单类型', trigger: 'blur' }
+    ],
+    routerName: [
+        { required: true, message: '请输入路由名称', trigger: 'blur' }
+    ],
+    routerPath: [
+        { required: true, message: '请输入路由路径', trigger: 'blur' },
+        {
+            validator: (rule, value, callback) => {
+                if (!value.startsWith('/') && addForm.parentId === -1) {
+                    callback(new Error('路由路径必须以 / 开头'))
+                }
+                callback()
+            },
+            trigger: 'blur'
+        }
+    ]
 })
 
 onMounted(() => {
