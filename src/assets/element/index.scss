@@ -1,14 +1,26 @@
-$color-primary: #4c956c;
-$color-second: #2c6e49;
-$color-info: #fefee3;
-$color-warning: #ffc9b9;
-$color-error: #d68c45;
+/* 1. 覆盖 Element Plus 变量 */
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  $colors: (
+    'primary': (
+      'base': #4c956c,
+    ),
+    'success': (
+      'base': #2c6e49,
+    ),
+    'warning': (
+      'base': #ffc9b9,
+    ),
+    'danger': (
+      'base': #d68c45,
+    ),
+    'error': (
+      'base': #d68c45,
+    ),
+    'info': (
+      'base': #fefee3,
+    ),
+  )
+);
 
-:root {
-    --el-color-primary: #4c956c;
-    --el-color-success: #2c6e49;
-    --el-color-info: #fefee3;
-    --el-color-warning: #ffc9b9;
-    --el-color-danger: #d68c45;
-    --el-color-error: #d68c45;
-}
+/* 2. 引入 Element Plus 所有组件样式（关键） */
+@use 'element-plus/theme-chalk/src/index.scss';

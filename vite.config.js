@@ -27,7 +27,7 @@ export default defineConfig({
             scss: {
                 // api: "modern-compiler", // Element Plus 中的解决办法
                 silenceDeprecations: [ 'legacy-js-api' ],
-                additionalData: `@use "@/assets/element/index.scss" as *;`,
+                additionalData: `@use "@/assets/main.scss" as *;`,
             },
         },
     }

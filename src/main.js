@@ -3,9 +3,8 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
+import '@/assets/element/index.scss'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-import '@/assets/main.scss'
 
 const app = createApp(App)
 
