@@ -4,7 +4,7 @@ import { getStorage } from "@/utils/storage.js";
 // 创建 axios 实例
 const service = axios.create({
     baseURL: import.meta.env.VITE_APP_BASE_API, // url = base url + request url
-    timeout: 5000 // 请求超时时间
+    timeout: 15000 // 请求超时时间 15s
 })
 
 // 请求拦截器

@@ -8,13 +8,6 @@ export const getMenuTreeApi = (data) => {
     })
 }
 
-export const getMenuListApi = () => {
-    return request({
-        url: '/menu/list',
-        method: 'get'
-    })
-}
-
 export const createMenuApi = (data) => {
     return request({
         url: '/menu/add',
