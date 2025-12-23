@@ -121,7 +121,7 @@
 
 import { onMounted, reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
-import { deleteDeptApi, getDeptListApi, updateDeptApi } from "@/api/dept/index.js";
+import { addDeptApi, deleteDeptApi, getDeptListApi, updateDeptApi } from "@/api/dept/index.js";
 
 const searchForm = reactive({
     deptName: '',
