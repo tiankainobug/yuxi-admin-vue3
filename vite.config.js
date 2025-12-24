@@ -9,6 +9,7 @@ export default defineConfig({
         vue(),
     ],
     server: {
+        port: 8888, // 可选：显式指定端口（默认就是5173）
         proxy: {
             '/api': {
                 target: 'http://localhost:8088',

@@ -52,11 +52,13 @@ router.beforeEach(async (to, from) => {
 
         return true
 
-    } else {
-        return {
-            path: '/login',
-            query: { redirect: to.fullPath }
-        };
+    }
+    if (to.name === 'login') {
+        return true
+    }
+    return {
+        path: '/login',
+        query: { redirect: to.fullPath }
     }
 })
 
