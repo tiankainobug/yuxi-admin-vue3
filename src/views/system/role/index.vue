@@ -47,19 +47,22 @@
                         <el-tag type="danger" v-else>禁用</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="180">
+                <el-table-column label="操作" width="300">
                     <template #default="{ row }">
-                        <el-button size="small" @click="goEdit(row)">编辑</el-button>
-                        <el-popconfirm
-                            title="确定删除该角色吗？"
-                            confirm-button-text="确定"
-                            cancel-button-text="取消"
-                            @confirm="goDelete(row)"
-                        >
-                            <template #reference>
-                                <el-button size="small" type="danger">删除</el-button>
-                            </template>
-                        </el-popconfirm>
+                        <template v-if="row.roleCode !== 'ADMIN'">
+                            <el-button type="primary" size="small" @click="goMenu(row)">分配菜单</el-button>
+                            <el-button size="small" @click="goEdit(row)">编辑</el-button>
+                            <el-popconfirm
+                                title="确定删除该角色吗？"
+                                confirm-button-text="确定"
+                                cancel-button-text="取消"
+                                @confirm="goDelete(row)"
+                            >
+                                <template #reference>
+                                    <el-button size="small" type="danger">删除</el-button>
+                                </template>
+                            </el-popconfirm>
+                        </template>
                     </template>
                 </el-table-column>
             </el-table>
@@ -97,6 +100,37 @@
                 </el-form-item>
             </el-form>
         </el-dialog>
+
+        <!-- 分配菜单 -->
+        <el-dialog
+            v-model="data.showMenuDialog"
+            title="分配菜单"
+            show-close
+            destroy-on-close
+        >
+            <el-form
+                label-width="100"
+            >
+                <el-form-item label="分配菜单">
+                    <el-tree
+                        ref="treeRef"
+                        node-key="id"
+                        style="max-width: 600px"
+                        :data="routerStore.dynamicRoutes"
+                        :default-checked-keys="data.defaultCheckedKeys"
+                        show-checkbox
+                        :props="{
+                            label: (nodeData) => { return nodeData.meta.name },
+                            children: 'children'
+                        }"
+                    />
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="goUpdateRoleMenu">提交</el-button>
+                    <el-button type="" @click="data.showMenuDialog = false">取消</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
     </div>
 </template>
 
@@ -104,19 +138,37 @@
 
 import { onMounted, reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
-import { addRoleApi, deleteRoleApi, getRoleListApi, updateRoleApi } from "@/api/role/index.js";
+import {
+    addRoleApi,
+    deleteRoleApi,
+    getRoleListApi,
+    getRoleMenuApi,
+    updateRoleApi,
+    updateRoleMenuApi
+} from "@/api/role/index.js";
+import useRouteStore from "@/stores/router.js";
 
+// store
+const routerStore = useRouteStore()
+// 数据
 const searchForm = reactive({
     roleName: '',
     status: ''
 })
 const addForm = reactive({})
-const loading = ref(false)
 let data = reactive({
     tableData: [],
     showAddDialog: false,
-    dialogType: 'add' // add || edit
+    dialogType: 'add', // add || edit
+
+    showMenuDialog: false, // 显示分配菜单的对话框
+    defaultCheckedKeys: [], // 默认选中的菜单ID
+    currentRole: {},
 })
+// loading
+const loading = ref(false)
+// ref
+const treeRef = ref(null)
 
 const rules = reactive({
     roleName: [
@@ -203,6 +255,33 @@ const goEdit = (row) => {
     initAddForm(row)
     data.dialogType = 'edit'
     data.showAddDialog = true
+}
+const goMenu = async (row) => {
+    // 获取此角色的菜单权限
+    const res = await getRoleMenuApi({
+        roleId: row.id
+    })
+    if (res.code !== 200) {
+        ElMessage.error(res.message)
+        return
+    }
+    // 赋值给默认选中的菜单ID
+    data.defaultCheckedKeys = res.data
+    data.currentRole = row
+    data.showMenuDialog = true
+}
+const goUpdateRoleMenu = async () => {
+    const checkedKeys = treeRef.value.getCheckedKeys()
+    const res = await updateRoleMenuApi({
+        roleId: data.currentRole.id,
+        menuIds: checkedKeys
+    })
+    if (res.code !== 200) {
+        ElMessage.error(res.message)
+        return
+    }
+    data.showMenuDialog = false
+    ElMessage.success(res.message)
 }
 </script>
 

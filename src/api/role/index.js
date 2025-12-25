@@ -30,3 +30,18 @@ export const deleteRoleApi = (id) => {
         method: 'post'
     })
 }
+
+export const updateRoleMenuApi = (data) => {
+    return request({
+        url: '/roleMenu/update',
+        method: 'post',
+        data
+    })
+}
+export const getRoleMenuApi = (data) => {
+    return request({
+        url: '/roleMenu/list',
+        method: 'post',
+        data
+    })
+}

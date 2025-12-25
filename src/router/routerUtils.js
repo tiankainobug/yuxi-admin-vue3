@@ -29,6 +29,7 @@ const buildRouterTree = (menuTree, parent) => {
     if (parent) {
         menuTree.forEach(menu => {
             const menuItem = {
+                id: menu.id,
                 path: menu.routerPath,
                 name: menu.routerName,
                 component: mapComponent(menu.component),
@@ -44,6 +45,7 @@ const buildRouterTree = (menuTree, parent) => {
     }
     menuTree.forEach(menu => {
         const menuItem = {
+            id: menu.id,
             path: menu.routerPath,
             name: menu.routerName,
             component: Layout,
