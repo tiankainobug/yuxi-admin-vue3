@@ -2,11 +2,10 @@
 import request from '@/utils/request'
 
 // GET 请求示例
-export function getUserInfo(params) {
+export function getUserInfo() {
   return request({
-    url: '/auth/info',
+    url: '/user/info',
     method: 'get',
-    params
   })
 }
 

@@ -1,7 +1,4 @@
-import { getMenuTreeApi } from "@/api/menu/index.js";
 import router from "@/router/index.js";
-import { getToken } from "@/utils/token.js";
-import useRouteStore from "@/stores/router.js";
 import Layout from "@/components/Layout/Layout.vue";
 
 const modules = import.meta.glob('./../views/**/*.vue')
@@ -24,7 +21,7 @@ export const mapComponent = (componentPath) => {
 /**
  * 构造菜单树
  */
-const buildRouterTree = (menuTree, parent) => {
+export const buildRouterTree = (menuTree, parent) => {
     const treeList = []
     if (parent) {
         menuTree.forEach(menu => {
@@ -68,13 +65,13 @@ const buildRouterTree = (menuTree, parent) => {
 /**
  * 初始化菜单树
  */
-export const getDynamicRoutes = async () => {
-    const res = await getMenuTreeApi()
-    if (res.code !== 200) {
-        await router.push({ path: '/login', query: { redirect: router.currentRoute.value.fullPath } })
-        return false
-    }
-    // 构造路由
-    useRouteStore().dynamicRoutes = buildRouterTree(res.data);
-    return true
-}
+// export const getDynamicRoutes = async () => {
+//     const res = await getMenuTreeApi()
+//     if (res.code !== 200) {
+//         await router.push({ path: '/login', query: { redirect: router.currentRoute.value.fullPath } })
+//         return false
+//     }
+//     // 构造路由
+//     useRouteStore().dynamicRoutes = buildRouterTree(res.data);
+//     return true
+// }

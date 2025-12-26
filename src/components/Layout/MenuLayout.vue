@@ -3,7 +3,7 @@
         default-active="2"
         router
     >
-        <template v-for="item in routeStore.dynamicRoutes" :key="item.path">
+        <template v-for="item in routeStore.routes" :key="item.path">
 
             <template v-if="isSubMenu(item)">
                 <el-sub-menu v-if="item.children.length > 0" :index="item.path">
@@ -31,10 +31,9 @@
 
 <script setup>
 import { Location } from "@element-plus/icons-vue";
-import { onMounted, reactive } from "vue";
+import { onMounted } from "vue";
 import MenuItem from "@/components/Layout/MenuItem.vue";
 import useRouteStore from "@/stores/router.js";
-import { getDynamicRoutes } from "@/router/routerUtils.js";
 
 const routeStore = useRouteStore()
 

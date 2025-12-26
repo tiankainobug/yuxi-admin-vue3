@@ -85,9 +85,15 @@ import { useRouter } from 'vue-router';
 import { ElMessage } from "element-plus";
 import { login } from "@/api/user.js";
 import { setToken } from "@/utils/token.js";
+import * as storage from "@/utils/storage.js";
+import useUserStore from "@/stores/user.js";
 
 // 路由对象
 const router = useRouter();
+
+// store
+const userStore = useUserStore();
+
 
 // 表单引用和状态
 const loginFormRef = ref(null);
@@ -126,9 +132,12 @@ const submitForm = async (formEl) => {
             // 校验成功，执行登录逻辑
             isLoading.value = true;
 
-            const res = await login(loginForm)
+            const loginRes = await userStore.login(loginForm)
 
-            setToken(res.data)
+            if (!loginRes) {
+                ElMessage.error('登录失败！请检查账号和密码');
+                return
+            }
 
             isLoading.value = false;
             ElMessage({
