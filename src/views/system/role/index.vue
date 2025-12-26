@@ -258,10 +258,8 @@ const goEdit = (row) => {
     data.showAddDialog = true
 }
 const goMenu = async (row) => {
-    // 获取此角色的菜单权限
-    const res = await getRoleMenuApi({
-        roleId: row.id
-    })
+    // 获取登录角色的菜单权限
+    const res = await getRoleMenuApi()
     if (res.code !== 200) {
         ElMessage.error(res.message)
         return

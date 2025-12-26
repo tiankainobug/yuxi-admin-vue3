@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { buildRouterTree } from "@/router/routerUtils.js";
-import { getRoutes } from "@/api/menu/index.js";
+import { getRoutesByRole } from "@/api/menu/index.js";
 
 const useRouteStore = defineStore('route', {
     state: () => ({
@@ -8,7 +8,7 @@ const useRouteStore = defineStore('route', {
     }),
     actions: {
         async getRoutes() {
-            const res = await getRoutes()
+            const res = await getRoutesByRole()
             if (res.code === 200) {
                 this.routes = buildRouterTree(res.data)
                 return true

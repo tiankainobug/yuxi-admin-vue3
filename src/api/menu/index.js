@@ -1,9 +1,10 @@
 import request from "@/utils/request.js";
 
-export const getRoutes = () => {
+
+export const getRoutesByRole = () => {
     return request({
-        url: '/menu',
-        method: 'get',
+        url: '/roleMenu/list',
+        method: 'post',
     })
 }
 
