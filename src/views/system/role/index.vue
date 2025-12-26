@@ -116,7 +116,7 @@
                         ref="treeRef"
                         node-key="id"
                         style="max-width: 600px"
-                        :data="routerStore.dynamicRoutes"
+                        :data="routerStore.routes"
                         :default-checked-keys="data.defaultCheckedKeys"
                         show-checkbox
                         :props="{
@@ -142,7 +142,7 @@ import {
     addRoleApi,
     deleteRoleApi,
     getRoleListApi,
-    getRoleMenuApi,
+    getRoleMenuIdsApi,
     updateRoleApi,
     updateRoleMenuApi
 } from "@/api/role/index.js";
@@ -258,8 +258,10 @@ const goEdit = (row) => {
     data.showAddDialog = true
 }
 const goMenu = async (row) => {
-    // 获取登录角色的菜单权限
-    const res = await getRoleMenuApi()
+    // 获取该角色的菜单权限
+    const res = await getRoleMenuIdsApi({
+        id: row.id
+    })
     if (res.code !== 200) {
         ElMessage.error(res.message)
         return
@@ -270,10 +272,13 @@ const goMenu = async (row) => {
     data.showMenuDialog = true
 }
 const goUpdateRoleMenu = async () => {
+    // 获取选中节点
     const checkedKeys = treeRef.value.getCheckedKeys()
+    // 获取半选中节点
+    const halfCheckedKeys = treeRef.value.getHalfCheckedKeys()
     const res = await updateRoleMenuApi({
         roleId: data.currentRole.id,
-        menuIds: checkedKeys
+        menuIds: checkedKeys.concat(halfCheckedKeys)
     })
     if (res.code !== 200) {
         ElMessage.error(res.message)

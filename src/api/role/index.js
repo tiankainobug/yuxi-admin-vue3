@@ -38,9 +38,9 @@ export const updateRoleMenuApi = (data) => {
         data
     })
 }
-export const getRoleMenuApi = (data) => {
+export const getRoleMenuIdsApi = (data) => {
     return request({
-        url: '/roleMenu/list',
+        url: '/role/getMenuIds',
         method: 'post',
         data
     })
