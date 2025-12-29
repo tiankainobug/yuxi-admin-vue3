@@ -37,3 +37,65 @@ export function deleteUser(id) {
     method: 'delete'
   })
 }
+
+// 获取用户列表
+export const getUserListApi = (data) => {
+    return request({
+        url: '/user/list',
+        method: 'post',
+        data
+    })
+}
+
+// 新增用户
+export const addUserApi = (data) => {
+    return request({
+        url: '/user/add',
+        method: 'post',
+        data
+    })
+}
+
+// 更新用户
+export const updateUserApi = (data) => {
+    return request({
+        url: '/user/update',
+        method: 'post',
+        data
+    })
+}
+
+// 删除用户
+export const deleteUserApi = (id) => {
+    return request({
+        url: `/user/delete/${id}`,
+        method: 'post'
+    })
+}
+
+// 重置用户密码
+export const resetUserPasswordApi = (data) => {
+    return request({
+        url: '/user/resetPassword',
+        method: 'post',
+        data
+    })
+}
+
+// 分配用户角色
+export const assignUserRoleApi = (data) => {
+    return request({
+        url: '/user/assignRole',
+        method: 'post',
+        data
+    })
+}
+
+// 获取用户角色
+export const getUserRoleIdsApi = (data) => {
+    return request({
+        url: '/user/getRoleIds',
+        method: 'post',
+        data
+    })
+}
