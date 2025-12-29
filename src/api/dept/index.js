@@ -2,7 +2,7 @@ import request from "@/utils/request.js";
 
 export const getDeptListApi = (data) => {
     return request({
-        url: '/dept/list',
+        url: '/dept/listAll',
         method: 'post',
         data
     })

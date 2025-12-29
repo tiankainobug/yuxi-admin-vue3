@@ -150,7 +150,7 @@
 <script setup>
 
 import { onMounted, reactive, ref } from "vue";
-import { createMenuApi, deleteMenuApi, getMenuTreeApi, updateMenuApi } from "@/api/menu/index.js";
+import { createMenuApi, deleteMenuApi, getMenuListApi, updateMenuApi } from "@/api/menu/index.js";
 import { ElMessage } from "element-plus";
 import _ from 'lodash';
 import IconSelect from '@/components/IconSelect.vue';
@@ -196,7 +196,7 @@ onMounted(() => {
 
 const goSearch = async () => {
     loading.value = true
-    const res = await getMenuTreeApi({
+    const res = await getMenuListApi({
         name: searchForm.name
     })
     loading.value = false

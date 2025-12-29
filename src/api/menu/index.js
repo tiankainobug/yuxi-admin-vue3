@@ -1,5 +1,12 @@
 import request from "@/utils/request.js";
 
+export const getMenuListApi = (data) => {
+    return request({
+        url: '/menu',
+        method: 'get',
+        params: data
+    })
+}
 
 export const getRoutesByRole = () => {
     return request({
