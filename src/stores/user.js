@@ -34,6 +34,15 @@ const useUserStore = defineStore('user', {
                 return true
             }
             return false
+        },
+        logout() {
+            this.token = ''
+            this.id = ''
+            this.name = ''
+            this.avatar = ''
+            this.roles = []
+            this.permissions = []
+            setToken('')
         }
     }
 })

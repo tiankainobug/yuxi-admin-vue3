@@ -47,6 +47,10 @@ $aside-width: 200px;
     display: flex;
     align-items: center;
     background: $color-primary;
+
+    .top-layout {
+        flex: 1;
+    }
 }
 
 </style>
