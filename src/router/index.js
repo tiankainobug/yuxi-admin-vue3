@@ -28,10 +28,28 @@ const router = createRouter({
                 },
             ]
         },
+        {
+            path: '/eatWhat',
+            name: 'EatWhat',
+            children: [
+                {
+                    path: 'eatWhat',
+                    name: '吃什么？',
+                    component: () => import('../views/eatWhat/index.vue')
+                },
+            ]
+        }
     ]
 })
 
+const whiteRouter = [
+    '/eatWhat/index'
+]
+
 router.beforeEach(async (to, from) => {
+    if (whiteRouter.includes(to.path)) {
+        return true
+    }
     // 判断是否有 token
     if (getToken()) {
 
